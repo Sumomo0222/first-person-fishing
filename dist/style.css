@@ -1,0 +1,524 @@
+/* ══════════════════════════════════════════════
+   湖边钓鱼 · 第一人称沉浸钓场
+   场景全部由 CSS / SVG 自绘，无外部图片
+   ══════════════════════════════════════════════ */
+
+/* ---------- 可插值的颜色变量（让时光过渡平滑） ---------- */
+@property --sky-1   { syntax: '<color>'; inherits: true; initial-value: #8fb3d4; }
+@property --sky-2   { syntax: '<color>'; inherits: true; initial-value: #d8c0c0; }
+@property --sky-3   { syntax: '<color>'; inherits: true; initial-value: #f4ddc2; }
+@property --water-1 { syntax: '<color>'; inherits: true; initial-value: #b9c6d2; }
+@property --water-2 { syntax: '<color>'; inherits: true; initial-value: #e3c8ae; }
+@property --water-3 { syntax: '<color>'; inherits: true; initial-value: #8fa6b8; }
+@property --mtn-far { syntax: '<color>'; inherits: true; initial-value: #a8b4c4; }
+@property --mtn-near{ syntax: '<color>'; inherits: true; initial-value: #8fa0b4; }
+@property --cloud-c { syntax: '<color>'; inherits: true; initial-value: #f6e8e2; }
+@property --dock-1  { syntax: '<color>'; inherits: true; initial-value: #8a6a4c; }
+@property --dock-2  { syntax: '<color>'; inherits: true; initial-value: #5c4432; }
+@property --dock-edge { syntax: '<color>'; inherits: true; initial-value: #3e2f24; }
+@property --dock-hi { syntax: '<color>'; inherits: true; initial-value: #d9b98c; }
+@property --sun-c   { syntax: '<color>'; inherits: true; initial-value: #ffe3ae; }
+@property --path-c  { syntax: '<color>'; inherits: true; initial-value: rgba(255,222,160,.75); }
+
+body { transition:
+  --sky-1 1.8s ease, --sky-2 1.8s ease, --sky-3 1.8s ease,
+  --water-1 1.8s ease, --water-2 1.8s ease, --water-3 1.8s ease,
+  --mtn-far 1.8s ease, --mtn-near 1.8s ease, --cloud-c 1.8s ease,
+  --dock-1 1.8s ease, --dock-2 1.8s ease, --dock-edge 1.8s ease,
+  --dock-hi 1.8s ease, --sun-c 1.8s ease, --path-c 1.8s ease; }
+
+/* ---------- 基础 ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  background: #0a1030;
+  user-select: none; -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* ---------- 时段主题 ---------- */
+/* 清晨湖面 */
+body.phase-dawn {
+  --sky-1:#8fb3d4; --sky-2:#dcc2c2; --sky-3:#f4ddc2;
+  --water-1:#bcc9d4; --water-2:#e2c9ae; --water-3:#8fa6b8;
+  --mtn-far:#a9b5c5; --mtn-near:#8798ad;
+  --cloud-c:#f6e8e2; --cloud-o:.85;
+  --dock-1:#8a6a4c; --dock-2:#5c4432; --dock-edge:#3e2f24; --dock-hi:#dcba8e;
+  --sun-c:#ffe0a6; --sun-left:25%; --sun-top:56%; --sun-size:8.5vmin; --sun-glow:rgba(255,214,150,.5); --sun-o:1;
+  --moon-o:0; --moon-top:30%;
+  --path-c:rgba(255,224,166,.62); --sunpath-o:.4;  --moonpath-o:0;  --sunpath-left:22%; --sunpath-w:8vmin;
+  --stars-o:0; --fireflies-o:0; --birds-o:.85; --mist-o:.6; --boat-lantern:0; --waves-o:.5;
+  --line-c:rgba(250,248,238,.85); --hand-c:#221c16;
+  --float-glow:0 0 0 rgba(0,0,0,0);
+}
+/* 正午晴湖 */
+body.phase-noon {
+  --sky-1:#3f8fd2; --sky-2:#7cc0ea; --sky-3:#d3ecf9;
+  --water-1:#2f7fb8; --water-2:#5fb2d8; --water-3:#8fd0e6;
+  --mtn-far:#7fa0b8; --mtn-near:#5c84a2;
+  --cloud-c:#ffffff; --cloud-o:.9;
+  --dock-1:#a07a52; --dock-2:#6e5238; --dock-edge:#4a3626; --dock-hi:#eccfa0;
+  --sun-c:#fff4cf; --sun-left:57%; --sun-top:10%; --sun-size:7.5vmin; --sun-glow:rgba(255,244,200,.55); --sun-o:1;
+  --moon-o:0; --moon-top:30%;
+  --path-c:rgba(255,255,240,.6); --sunpath-o:.32; --moonpath-o:0; --sunpath-left:52%; --sunpath-w:12vmin;
+  --stars-o:0; --fireflies-o:0; --birds-o:.9; --mist-o:0; --boat-lantern:0; --waves-o:.7;
+  --line-c:rgba(250,252,255,.9); --hand-c:#241d16;
+  --float-glow:0 0 0 rgba(0,0,0,0);
+}
+/* 黄昏风起 */
+body.phase-dusk {
+  --sky-1:#6f5a9c; --sky-2:#e87a5a; --sky-3:#ffb26b;
+  --water-1:#7a5a78; --water-2:#d98a5f; --water-3:#4a3e6a;
+  --mtn-far:#6a5a80; --mtn-near:#50466e;
+  --cloud-c:#ffcfae; --cloud-o:.9;
+  --dock-1:#7c5c40; --dock-2:#4e3a2c; --dock-edge:#33251d; --dock-hi:#e8a870;
+  --sun-c:#ff9e58; --sun-left:62%; --sun-top:58%; --sun-size:14vmin; --sun-glow:rgba(255,150,80,.55); --sun-o:1;
+  --moon-o:0; --moon-top:30%;
+  --path-c:rgba(255,180,110,.7); --sunpath-o:.55; --moonpath-o:0; --sunpath-left:60%; --sunpath-w:11vmin;
+  --stars-o:0; --fireflies-o:0; --birds-o:.75; --mist-o:.16; --boat-lantern:.35; --waves-o:.55;
+  --line-c:rgba(255,240,224,.88); --hand-c:#1c1613;
+  --float-glow:0 0 0 rgba(0,0,0,0);
+}
+/* 暮蓝星升 */
+body.phase-twilight {
+  --sky-1:#1e2a5e; --sky-2:#3a4a8a; --sky-3:#7a6aa8;
+  --water-1:#2a3a6e; --water-2:#4a5a92; --water-3:#2c3866;
+  --mtn-far:#2e3a66; --mtn-near:#242e54;
+  --cloud-c:#8a8ab8; --cloud-o:.55;
+  --dock-1:#5c4838; --dock-2:#3a2d24; --dock-edge:#281f19; --dock-hi:#a08868;
+  --sun-c:#ffd9a0; --sun-o:0; --sun-left:62%; --sun-top:58%; --sun-size:10vmin; --sun-glow:rgba(0,0,0,0);
+  --moon-c:#eef0e2; --moon-o:.55; --moon-left:30%; --moon-top:26%; --moon-size:7vmin; --moon-glow:rgba(230,240,220,.28);
+  --path-c:rgba(220,230,255,.5); --sunpath-o:0; --moonpath-o:.16; --sunpath-left:60%; --sunpath-w:9vmin; --moonpath-left:27%;
+  --stars-o:.55; --fireflies-o:0; --birds-o:.22; --mist-o:.18; --boat-lantern:.8; --waves-o:.35;
+  --line-c:rgba(226,234,255,.8); --hand-c:#141018;
+  --float-glow:0 0 10px 2px rgba(255,190,110,.28);
+}
+/* 月光时刻 */
+body.phase-night {
+  --sky-1:#0a1030; --sky-2:#16204a; --sky-3:#2a3a6a;
+  --water-1:#14224a; --water-2:#24366a; --water-3:#3a4a78;
+  --mtn-far:#141e42; --mtn-near:#0e1633;
+  --cloud-c:#26305a; --cloud-o:.4;
+  --dock-1:#463628; --dock-2:#2c2118; --dock-edge:#1c1510; --dock-hi:#88744e;
+  --sun-c:#ffd9a0; --sun-o:0; --sun-left:62%; --sun-top:58%; --sun-size:10vmin; --sun-glow:rgba(0,0,0,0);
+  --moon-c:#f4f0d8; --moon-o:1; --moon-left:66%; --moon-top:14%; --moon-size:10.5vmin; --moon-glow:rgba(240,240,200,.4);
+  --path-c:rgba(226,238,255,.62); --sunpath-o:0; --moonpath-o:.5; --sunpath-left:60%; --sunpath-w:9vmin; --moonpath-left:63%;
+  --stars-o:1; --fireflies-o:1; --birds-o:0; --mist-o:.1; --boat-lantern:1; --waves-o:.3;
+  --line-c:rgba(238,244,255,.9); --hand-c:#100d12;
+  --float-glow:0 0 16px 5px rgba(255,190,110,.55);
+}
+
+/* ---------- 场景分层 ---------- */
+.scene { position: fixed; inset: 0; overflow: hidden; }
+.scene::after { /* 暗角，营造目光聚焦 */
+  content: ''; position: absolute; inset: 0; z-index: 12; pointer-events: none;
+  background: radial-gradient(120% 92% at 50% 42%, transparent 58%, rgba(8,12,26,.30) 100%);
+}
+
+/* 天空 */
+.sky {
+  position: absolute; left: 0; right: 0; top: 0; height: 44%; z-index: 1;
+  background: linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 58%, var(--sky-3) 100%);
+}
+
+/* 太阳 */
+.sun {
+  position: absolute; z-index: 2;
+  left: var(--sun-left); top: var(--sun-top); width: var(--sun-size); height: var(--sun-size);
+  transform: translate(-50%, -50%); border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #fff8e0, var(--sun-c) 62%, rgba(255,210,140,.9));
+  box-shadow: 0 0 6vmin 3vmin var(--sun-glow);
+  opacity: var(--sun-o); transition: opacity 1.8s ease, left 1.8s ease, top 1.8s ease, width 1.8s ease, height 1.8s ease;
+}
+/* 月亮 */
+.moon {
+  position: absolute; z-index: 2;
+  left: var(--moon-left, 66%); top: var(--moon-top); width: var(--moon-size, 9vmin); height: var(--moon-size, 9vmin);
+  transform: translate(-50%, -50%); border-radius: 50%;
+  background: radial-gradient(circle at 40% 36%, #fffef2, var(--moon-c, #f4f0d8) 68%, #d8d4b4);
+  box-shadow: 0 0 5vmin 2.4vmin var(--moon-glow, rgba(240,240,200,.35));
+  opacity: var(--moon-o); transition: opacity 1.8s ease, left 1.8s ease, top 1.8s ease;
+}
+.crater { position: absolute; border-radius: 50%; background: rgba(180,176,148,.5); }
+.crater.c1 { width: 22%; height: 22%; left: 24%; top: 30%; }
+.crater.c2 { width: 14%; height: 14%; left: 58%; top: 52%; }
+.crater.c3 { width: 10%; height: 10%; left: 44%; top: 20%; }
+
+/* 星星（JS 生成） */
+.stars { position: absolute; inset: 0; opacity: var(--stars-o); transition: opacity 1.8s ease; z-index: 1; }
+.stars i {
+  position: absolute; border-radius: 50%; background: #f4f6ff;
+  animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+
+/* 云 */
+.clouds { position: absolute; inset: 0; z-index: 3; overflow: hidden; }
+.cloud {
+  position: absolute; height: 3.6vmin; width: 11vmin; border-radius: 5vmin;
+  background: var(--cloud-c); opacity: var(--cloud-o); filter: blur(1.5px);
+  transition: opacity 1.8s ease;
+}
+.cloud::before, .cloud::after {
+  content: ''; position: absolute; border-radius: 50%; background: inherit;
+}
+.cloud::before { width: 46%; height: 150%; left: 14%; top: -68%; }
+.cloud::after  { width: 34%; height: 110%; right: 16%; top: -42%; }
+.cl1 { top: 14%; animation: drift 150s linear infinite; }
+.cl2 { top: 26%; transform: scale(.72); animation: drift 190s linear infinite; animation-delay: -80s; }
+.cl3 { top: 6%;  transform: scale(.55); animation: drift 120s linear infinite; animation-delay: -46s; }
+@keyframes drift { from { left: -18vmin; } to { left: 105vw; } }
+
+/* 飞鸟 */
+.birds {
+  position: absolute; top: 11%; left: 0; width: 16vmin; height: 6vmin; z-index: 3;
+  opacity: var(--birds-o); transition: opacity 1.8s ease;
+  animation: birdfly 74s linear infinite;
+}
+.bird { fill: none; stroke: rgba(30,34,48,.75); stroke-width: 2.4; stroke-linecap: round; }
+@keyframes birdfly { from { transform: translateX(-20vmin); } to { transform: translateX(112vw); } }
+
+/* 薄雾（横跨地平线） */
+.mist {
+  position: absolute; left: 0; right: 0; bottom: -6vmin; height: 12vmin; z-index: 6;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,.44) 42%, rgba(255,255,255,.12) 78%, transparent);
+  opacity: var(--mist-o); transition: opacity 1.8s ease; pointer-events: none;
+}
+
+/* 远山与对岸树影 */
+.farshore { position: absolute; left: 0; right: 0; top: 24%; height: 20%; z-index: 2; }
+.farshore svg { width: 100%; height: 100%; display: block; }
+.mtn-far  { fill: var(--mtn-far);  opacity: .72; }
+.mtn-near { fill: var(--mtn-near); }
+.trees    { fill: var(--mtn-near); }
+
+/* 湖面 */
+.water {
+  position: absolute; left: 0; right: 0; top: 44%; height: 32%; z-index: 3;
+  background: linear-gradient(180deg, var(--water-1) 0%, var(--water-2) 38%, var(--water-3) 100%);
+}
+.water::before { /* 对岸倒影暗带 */
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 22%;
+  background: linear-gradient(180deg, rgba(16,24,44,.20), transparent);
+}
+.waves { position: absolute; left: 0; right: 0; pointer-events: none; }
+.waves.w1 {
+  top: 8%; height: 60%; opacity: calc(var(--waves-o) * .5);
+  background: repeating-linear-gradient(178deg, rgba(255,255,255,.32) 0 1.5px, transparent 1.5px 26px);
+  animation: waveShift 14s linear infinite;
+}
+.waves.w2 {
+  top: 30%; height: 60%; opacity: calc(var(--waves-o) * .35);
+  background: repeating-linear-gradient(182deg, rgba(14,26,44,.20) 0 2px, transparent 2px 34px);
+  animation: waveShift 21s linear infinite reverse;
+}
+@keyframes waveShift { from { background-position: 0 0; } to { background-position: -240px 0; } }
+
+/* 日光 / 月光水路 */
+.lightpath {
+  position: absolute; top: 0; height: 82%; pointer-events: none;
+  width: var(--sunpath-w, 9vmin); left: var(--sunpath-left, 60%);
+  background: repeating-linear-gradient(180deg, var(--path-c) 0 4px, transparent 4px 13px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 72%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 72%, transparent);
+  filter: blur(1px);
+  animation: pathShimmer 5.5s ease-in-out infinite alternate;
+}
+.lightpath.sunpath  { opacity: var(--sunpath-o);  transition: opacity 1.8s ease, left 1.8s ease; }
+.lightpath.moonpath { opacity: var(--moonpath-o); transition: opacity 1.8s ease, left 1.8s ease;
+  left: var(--moonpath-left, 63%); width: 10vmin; animation-duration: 7s; }
+@keyframes pathShimmer { from { transform: translateX(-1.2vmin) scaleX(.92); } to { transform: translateX(1.2vmin) scaleX(1.05); } }
+
+/* 碎金光斑（JS 生成） */
+.sparkles { position: absolute; inset: 0; }
+.sparkles i {
+  position: absolute; height: 2px; border-radius: 2px; background: rgba(255,255,255,.75);
+  animation: sparkle 4s ease-in-out infinite;
+}
+@keyframes sparkle { 0%,100% { transform: scaleX(.3); opacity: .15; } 50% { transform: scaleX(1); opacity: .85; } }
+
+/* 小船 */
+.boat {
+  position: absolute; top: calc(0% - 0.4vmin); left: 56%; width: 11vmin; height: 4.6vmin;
+  animation: boatdrift 160s ease-in-out infinite alternate;
+}
+@keyframes boatdrift { from { transform: translateX(-7vmin); } to { transform: translateX(18vmin); } }
+.boat-hull { fill: #1c2230; opacity: .88; }
+.boat-cab  { fill: #1c2230; opacity: .75; }
+.boat-mast { stroke: #1c2230; stroke-width: 2; opacity: .75; }
+.lantern {
+  fill: #ffd88a; opacity: var(--boat-lantern); transition: opacity 1.8s ease;
+  filter: drop-shadow(0 0 4px rgba(255,200,120,.9));
+}
+
+/* 萤火虫（JS 生成，仅夜晚） */
+.fireflies { position: absolute; inset: -12% 0 0 0; opacity: var(--fireflies-o); transition: opacity 1.8s ease; }
+.fireflies i {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: #d8f0a0; box-shadow: 0 0 6px 2px rgba(216,240,160,.65);
+  animation: ffDrift 11s ease-in-out infinite alternate, ffPulse 2.6s ease-in-out infinite;
+}
+@keyframes ffDrift { from { transform: translate(0, 0); } to { transform: translate(6vmin, -4vmin); } }
+@keyframes ffPulse { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+
+/* ---------- 木栈桥（第一人称近景） ---------- */
+.dock { position: absolute; left: 0; right: 0; bottom: 0; height: 24%; z-index: 5; }
+.dock svg { width: 100%; height: 100%; display: block; }
+.s-d1 { stop-color: var(--dock-1); }
+.s-d2 { stop-color: var(--dock-2); }
+.seams  { stroke: var(--dock-edge); stroke-width: 2.4; opacity: .55; }
+.seam-h { stroke: var(--dock-edge); stroke-width: 2; opacity: .3; }
+.dock-rim { stroke: var(--dock-hi); stroke-width: 3; opacity: .85; }
+.dock-under { fill: var(--dock-edge); opacity: .8; }
+.dock::after { /* 木纹 */
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .4; mix-blend-mode: multiply;
+  background: repeating-linear-gradient(90deg, rgba(30,18,8,.16) 0 2px, transparent 2px 96px),
+              repeating-linear-gradient(0deg, rgba(30,18,8,.07) 0 3px, transparent 3px 9px);
+}
+/* 系船柱与缆绳（立于栈桥远端边缘） */
+.post {
+  position: absolute; right: 9%; top: -8.2vmin; width: 2.6vmin; height: 9.6vmin;
+  background: linear-gradient(90deg, var(--dock-edge), var(--dock-1) 45%, var(--dock-edge));
+  border-radius: 1vmin 1vmin .3vmin .3vmin; box-shadow: 0 2px 10px rgba(0,0,0,.35);
+}
+.post::before {
+  content: ''; position: absolute; left: -12%; top: -3%; width: 124%; height: 9%;
+  border-radius: 50%; background: var(--dock-edge);
+}
+.rope {
+  position: absolute; left: 50%; top: 58%; width: 7.5vmin; height: 3.4vmin;
+  transform: translateX(-50%); border: 1.1vmin solid var(--dock-edge);
+  border-radius: 50%; opacity: .8;
+}
+
+/* ---------- 鱼竿 / 鱼线 / 手（JS 每帧重绘 path） ---------- */
+.rig { position: fixed; inset: 0; z-index: 8; pointer-events: none; width: 100%; height: 100%; }
+.rod-base { stroke: var(--hand-c); stroke-width: 9; stroke-linecap: round; }
+.rod-tip  { stroke: var(--hand-c); stroke-width: 4.6; stroke-linecap: round; }
+.line { stroke: var(--line-c); stroke-width: 1.5; opacity: .9; }
+.hand-l { stroke: var(--hand-c); stroke-width: 24px; stroke-linecap: round; fill: none; }
+.hand-f { fill: var(--hand-c); }
+.reel { fill: none; stroke: var(--hand-c); stroke-width: 3; }
+.reel-dot { fill: var(--hand-c); }
+
+/* ---------- 浮漂 ---------- */
+.float {
+  position: fixed; z-index: 9; width: 2.7vmin; min-width: 17px; height: 4.4vmin; min-height: 26px;
+  transform: translate(-50%, -50%); pointer-events: none; opacity: 0;
+}
+.float-stem { position: absolute; left: 50%; top: -12%; width: 12%; height: 36%; transform: translateX(-50%);
+  background: #e8e2d4; border-radius: 2px; }
+.float-stem::after { content: ''; position: absolute; left: -20%; top: -26%; width: 140%; height: 34%;
+  border-radius: 50%; background: #e8564e; }
+.float-body { position: absolute; left: 0; top: 20%; width: 100%; height: 66%;
+  border-radius: 46% 46% 40% 40%; background: linear-gradient(180deg, #e8564e 52%, #f2ede2 52%);
+  box-shadow: inset -0.5vmin -0.3vmin 0.8vmin rgba(120,30,30,.28), var(--float-glow);
+  transition: box-shadow .4s ease; }
+
+/* 咬钩提示 */
+.bite-mark {
+  position: fixed; z-index: 10; width: 4.6vmin; min-width: 28px; height: 4.6vmin; min-height: 28px;
+  transform: translate(-50%, -100%); pointer-events: none; opacity: 0;
+  background: #ff5b48; color: #fff; border-radius: 50%; border: 2px solid rgba(255,255,255,.85);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.6vmin; font-weight: 800; box-shadow: 0 0 14px rgba(255,90,60,.7);
+}
+.bite-mark.show { opacity: 1; animation: markPop .45s cubic-bezier(.2,1.4,.4,1); }
+@keyframes markPop { from { transform: translate(-50%, -100%) scale(.3); } to { transform: translate(-50%, -100%) scale(1); } }
+
+/* ---------- 水面特效 ---------- */
+.fx { position: fixed; inset: 0; z-index: 7; pointer-events: none; }
+.ripple {
+  position: absolute; border: 2px solid rgba(255,255,255,.6); border-radius: 50%; opacity: 0;
+}
+.drop { position: absolute; width: 5px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.9); }
+.flash { position: absolute; width: 26vmin; height: 26vmin; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.65), transparent 62%); }
+.catch-fly { position: fixed; z-index: 40; width: clamp(70px, 13vmin, 120px); pointer-events: none;
+  transform: translate(-50%, -50%); filter: drop-shadow(0 10px 14px rgba(10,20,40,.35)); }
+.catch-fly svg { width: 100%; height: auto; display: block; }
+
+/* ---------- HUD ---------- */
+.hud {
+  position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 14px; right: 14px; z-index: 30;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; pointer-events: none;
+}
+.chip {
+  pointer-events: auto; display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #fff;
+  background: rgba(12,20,38,.44); border: 1px solid rgba(255,255,255,.22);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  text-shadow: 0 1px 4px rgba(0,10,30,.5);
+}
+.chip b { color: #ffd88a; font-weight: 700; }
+.chip-btn { cursor: pointer; transition: transform .15s ease, background .2s ease; font-family: inherit; }
+.chip-btn:active { transform: scale(.95); background: rgba(30,44,74,.6); }
+
+.status {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 24; width: min(92vw, 560px);
+  text-align: center; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,.94);
+  text-shadow: 0 1px 8px rgba(4,14,34,.85); pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+/* 主按钮 */
+.main-btn {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 30;
+  min-width: min(230px, 62vw); height: 56px; padding: 0 30px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.4); cursor: pointer; font-family: inherit;
+  background: linear-gradient(180deg, rgba(42,168,152,.95), rgba(24,110,100,.96));
+  color: #fff; font-size: 18px; font-weight: 700; letter-spacing: .1em;
+  box-shadow: 0 12px 30px rgba(8,40,50,.5), inset 0 1px 0 rgba(255,255,255,.4);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: background .25s ease, box-shadow .25s ease, transform .15s ease;
+}
+.main-btn:active:not(:disabled) { transform: translateX(-50%) scale(.96); }
+.main-btn:disabled {
+  cursor: default; color: rgba(255,255,255,.75);
+  background: linear-gradient(180deg, rgba(58,68,90,.6), rgba(40,50,72,.66));
+  box-shadow: 0 6px 18px rgba(8,20,40,.35);
+}
+.main-btn.urgent {
+  background: linear-gradient(180deg, #ff7a4d, #e84438);
+  box-shadow: 0 0 26px rgba(255,90,60,.7), inset 0 1px 0 rgba(255,255,255,.4);
+  animation: urgentPulse .5s ease-in-out infinite alternate;
+}
+@keyframes urgentPulse { from { transform: translateX(-50%) scale(1); } to { transform: translateX(-50%) scale(1.07); } }
+
+/* ---------- 弹窗 ---------- */
+.modal, .dex {
+  position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+  background: rgba(8,14,30,.55); backdrop-filter: blur(6px) saturate(.85); -webkit-backdrop-filter: blur(6px) saturate(.85);
+  opacity: 0; visibility: hidden; transition: opacity .28s ease, visibility .28s ease;
+}
+.modal.show, .dex.show { opacity: 1; visibility: visible; }
+
+.modal-card {
+  width: min(340px, 92vw); max-height: 86vh; overflow-y: auto;
+  background: linear-gradient(180deg, #fffdf6, #f2ead8);
+  border-radius: 22px; padding: 24px 22px 20px; text-align: center; color: #4a463c;
+  box-shadow: 0 24px 60px rgba(4,10,30,.5), inset 0 1px 0 #fff;
+  transform: translateY(14px) scale(.92); transition: transform .32s cubic-bezier(.2,1.3,.4,1);
+  position: relative;
+}
+.modal.show .modal-card { transform: translateY(0) scale(1); }
+
+.card-rarity {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  padding: 5px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 800; letter-spacing: .2em;
+  color: #fff; white-space: nowrap;
+}
+.r-common { background: linear-gradient(180deg, #8aa892, #6a8a74); }
+.r-scarce { background: linear-gradient(180deg, #6a94cc, #4a72aa); }
+.r-rare   { background: linear-gradient(180deg, #9a78cc, #7a58ac); }
+.r-legend { background: linear-gradient(180deg, #e8b25e, #cc8e3a); box-shadow: 0 0 14px rgba(232,178,94,.8); }
+
+.card-art {
+  width: 138px; height: 138px; margin: 12px auto 4px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #ffffff, #e4ecdf 72%, #d4e0d2);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(90,110,90,.18);
+}
+.card-art svg { width: 96px; height: 96px; }
+.card-no { margin-top: 8px; font-size: 11px; letter-spacing: .28em; color: #a09a86; font-weight: 700; }
+.card-name { font-size: 24px; margin: 4px 0 2px; color: #35322a; letter-spacing: .06em; }
+.card-phase { font-size: 12.5px; color: #8a8474; margin-bottom: 10px; }
+.card-record {
+  font-size: 13.5px; line-height: 1.7; color: #6a6456; font-style: italic;
+  border-top: 1px dashed #d8cfb8; padding-top: 10px; margin-bottom: 16px;
+}
+.card-actions { display: flex; gap: 10px; justify-content: center; }
+.ghost-btn, .primary-btn {
+  font-family: inherit; border-radius: 999px; cursor: pointer; font-size: 14.5px; font-weight: 700;
+  padding: 10px 20px; transition: transform .15s ease, box-shadow .2s ease;
+}
+.ghost-btn:active, .primary-btn:active { transform: scale(.95); }
+.ghost-btn { background: transparent; border: 1.5px solid #c9bfa4; color: #7a745e; }
+.primary-btn {
+  border: none; color: #fff; letter-spacing: .08em;
+  background: linear-gradient(180deg, #3aa892, #247868);
+  box-shadow: 0 6px 16px rgba(30,120,100,.4);
+}
+/* 脱钩弹窗变体 */
+.modal-card.miss .card-art { background: radial-gradient(circle at 50% 42%, #ffffff, #e2e6ea 72%, #ccd4da); }
+
+/* ---------- 图鉴 ---------- */
+.dex-card {
+  width: min(680px, 94vw); max-height: 88vh; overflow-y: auto;
+  background: linear-gradient(180deg, #fffdf6, #f0e8d4);
+  border-radius: 24px; padding: 22px 20px 18px; color: #4a463c;
+  box-shadow: 0 24px 60px rgba(4,10,30,.5);
+  transform: translateY(16px) scale(.96); transition: transform .32s cubic-bezier(.2,1.3,.4,1);
+}
+.dex.show .dex-card { transform: translateY(0) scale(1); }
+.dex-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.dex-head h2 { font-size: 21px; color: #35322a; letter-spacing: .08em; }
+.dex-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.dex-progress span { font-size: 13.5px; font-weight: 700; color: #6a6456; white-space: nowrap; }
+.dex-bar { flex: 1; height: 8px; border-radius: 99px; background: #e2d8c0; overflow: hidden; }
+.dex-bar i { display: block; height: 100%; width: 0; border-radius: 99px;
+  background: linear-gradient(90deg, #3aa892, #e8b25e); transition: width .5s ease; }
+.dex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+.dex-cell {
+  position: relative; border-radius: 14px; padding: 10px 6px 8px; text-align: center;
+  background: rgba(255,255,255,.5); border: 1.5px solid #d8cfb8; min-height: 128px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+}
+.dex-cell .art { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; }
+.dex-cell .art svg { width: 48px; height: 48px; }
+.dex-cell .nm { font-size: 12.5px; font-weight: 700; margin-top: 6px; color: #45423a; letter-spacing: .04em; }
+.dex-cell .no { font-size: 10px; color: #a09a86; letter-spacing: .2em; margin-top: 2px; }
+.dex-cell.caught { border-color: #9cc2ac; background: rgba(240,250,242,.65); }
+.dex-cell.caught.r-scarce-c { border-color: #9ab4d8; background: rgba(238,244,252,.6); }
+.dex-cell.caught.r-rare-c   { border-color: #b49ad8; background: rgba(244,240,252,.6); }
+.dex-cell.caught.r-legend-c { border-color: #e0b060; background: rgba(252,246,232,.75); box-shadow: 0 0 10px rgba(232,178,94,.35); }
+.dex-cell.uncaught .art svg { filter: brightness(0) opacity(.42); }
+.dex-cell.uncaught .nm { color: #b0a88e; }
+.dex-cell .qmark {
+  display: none; position: absolute; top: 34px; left: 50%; transform: translateX(-50%);
+  font-size: 26px; font-weight: 900; color: #b8ad8e; text-shadow: 0 1px 0 #fff;
+}
+.dex-cell.uncaught .qmark { display: block; }
+.dex-hint { margin-top: 12px; text-align: center; font-size: 12px; color: #a09878; font-style: italic; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(8px);
+  z-index: 60; padding: 9px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 600; color: #fff;
+  background: rgba(16,24,44,.82); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+  max-width: 86vw; text-align: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- 移动端 ---------- */
+@media (max-width: 640px) {
+  .hud { left: 10px; right: 10px; }
+  .chip { padding: 6px 11px; font-size: 12.5px; }
+  .status { font-size: 12.5px; bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .main-btn { height: 54px; font-size: 16.5px; min-width: min(210px, 66vw); }
+  .dock { height: 21%; }
+  .post { right: 6%; height: 8.5vmin; }
+  .hand-l { stroke-width: 19px; }
+  .rod-base { stroke-width: 7.5; }
+  .modal-card { padding: 22px 18px 18px; }
+  .card-art { width: 118px; height: 118px; }
+  .card-art svg { width: 84px; height: 84px; }
+  .dex-grid { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+  .dex-cell { min-height: 116px; }
+  .cloud { filter: blur(1px); }
+}
+@media (max-height: 560px) { /* 横屏手机 */
+  .dock { height: 17%; }
+  .status { bottom: calc(74px + env(safe-area-inset-bottom)); font-size: 12px; }
+  .main-btn { height: 48px; bottom: calc(14px + env(safe-area-inset-bottom)); }
+}
+
+/* ---------- 降低动态 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cloud, .birds, .boat, .lightpath { animation: none; }
+  .stars i, .fireflies i { animation: none; opacity: .8; }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="description" content="湖边钓鱼 · 第一人称沉浸钓场：坐在木栈桥头，抛竿、看浮漂、收线，把奇妙渔获收进湖边图鉴。">
+<meta name="theme-color" content="#8fb3d4">
+<title>湖边钓鱼 · 第一人称沉浸钓场</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="phase-dawn">
+
+  <!-- ══════════ 第一人称场景 ══════════ -->
+  <div class="scene" id="scene" aria-label="第一人称湖边钓鱼场景">
+
+    <!-- 远景：天空 -->
+    <div class="sky">
+      <div class="stars" id="stars" aria-hidden="true"></div>
+      <div class="sun" aria-hidden="true"></div>
+      <div class="moon" aria-hidden="true"><i class="crater c1"></i><i class="crater c2"></i><i class="crater c3"></i></div>
+      <div class="clouds" aria-hidden="true">
+        <div class="cloud cl1"></div>
+        <div class="cloud cl2"></div>
+        <div class="cloud cl3"></div>
+      </div>
+      <svg class="birds" viewBox="0 0 120 30" aria-hidden="true">
+        <g class="birds-g">
+          <path class="bird" d="M8 14 q6 -6 12 0 q6 -6 12 0"/>
+          <path class="bird" d="M52 8 q4.5 -4.5 9 0 q4.5 -4.5 9 0"/>
+          <path class="bird" d="M84 18 q3.6 -3.6 7.2 0 q3.6 -3.6 7.2 0"/>
+        </g>
+      </svg>
+      <div class="mist" aria-hidden="true"></div>
+    </div>
+
+    <!-- 远景：湖对岸山影与树影 -->
+    <div class="farshore" aria-hidden="true">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+        <path class="mtn-far" d="M0 200 L0 118 L150 62 L300 116 L430 74 L580 122 L720 88 L870 128 L1010 70 L1160 118 L1300 84 L1440 126 L1440 200 Z"/>
+        <path class="mtn-near" d="M0 200 L0 152 L180 112 L340 156 L520 120 L700 158 L880 124 L1060 160 L1240 118 L1440 156 L1440 200 Z"/>
+        <path id="fs-trees" class="trees" d="M0 200 L0 184 Q14 168 30 184 Q44 170 58 184 Q74 164 90 184 Q104 172 118 184 Q134 166 150 184 Q164 172 178 184 Q194 165 210 184 L210 200 Z"/>
+        <use class="trees" href="#fs-trees" x="210"/>
+        <use class="trees" href="#fs-trees" x="420"/>
+        <use class="trees" href="#fs-trees" x="630"/>
+        <use class="trees" href="#fs-trees" x="840"/>
+        <use class="trees" href="#fs-trees" x="1050"/>
+        <use class="trees" href="#fs-trees" x="1260"/>
+      </svg>
+    </div>
+
+    <!-- 中景：湖面 -->
+    <div class="water" aria-hidden="true">
+      <div class="lightpath sunpath"></div>
+      <div class="lightpath moonpath"></div>
+      <div class="sparkles" id="sparkles"></div>
+      <div class="waves w1"></div>
+      <div class="waves w2"></div>
+      <div class="boat">
+        <svg viewBox="0 0 110 44">
+          <path class="boat-hull" d="M6 26 L104 26 L92 40 Q55 44 18 40 Z"/>
+          <path class="boat-cab" d="M44 14 L72 14 L76 26 L40 26 Z"/>
+          <line class="boat-mast" x1="58" y1="14" x2="58" y2="4"/>
+          <circle class="lantern" cx="58" cy="4" r="2.6"/>
+        </svg>
+      </div>
+      <div class="fireflies" id="fireflies"></div>
+    </div>
+
+    <!-- 水面特效层：涟漪 / 水花 / 渔获跃出 -->
+    <div class="fx" id="fx" aria-hidden="true"></div>
+
+    <!-- 近景：木栈桥 -->
+    <div class="dock" aria-hidden="true">
+      <svg viewBox="0 0 1440 260" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="dockGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop class="s-d1" offset="0"/>
+            <stop class="s-d2" offset="1"/>
+          </linearGradient>
+        </defs>
+        <path class="dock-surf" d="M320 26 L1120 26 L1440 260 L0 260 Z" fill="url(#dockGrad)"/>
+        <path class="seams" fill="none" d="M536 26 L0 260 M567 26 L120 260 M597 26 L240 260 M628 26 L360 260 M658 26 L480 260 M688 26 L600 260 M719 26 L720 260 M749 26 L840 260 M780 26 L960 260 M810 26 L1080 260 M840 26 L1200 260 M871 26 L1320 260 M901 26 L1440 260"/>
+        <path class="seam-h" fill="none" d="M233 90 Q720 106 1207 90"/>
+        <path class="seam-h" fill="none" d="M150 150 Q720 170 1290 150"/>
+        <path class="seam-h" fill="none" d="M76 205 Q720 228 1364 205"/>
+        <path class="dock-rim" fill="none" d="M320 26 L1120 26"/>
+        <path class="dock-under" d="M1120 26 L1160 52 L300 52 L320 26 Z"/>
+      </svg>
+      <div class="post"><i class="rope"></i></div>
+    </div>
+
+    <!-- 鱼竿 / 鱼线 / 手部剪影（JS 每帧重绘） -->
+    <svg class="rig" id="rigSvg" aria-hidden="true">
+      <path class="line" id="linePath" d="" fill="none"/>
+      <path class="rod-base" id="rodBase" d="" fill="none"/>
+      <path class="rod-tip" id="rodTip" d="" fill="none"/>
+      <g id="handsG"></g>
+    </svg>
+
+    <!-- 浮漂 -->
+    <div class="float" id="float" aria-hidden="true">
+      <i class="float-stem"></i>
+      <i class="float-body"></i>
+    </div>
+    <div class="bite-mark" id="biteMark" aria-hidden="true">!</div>
+  </div>
+
+  <!-- ══════════ HUD ══════════ -->
+  <header class="hud">
+    <div class="chip time-chip"><span class="chip-icon" id="timeIcon">🌅</span><span id="timeName">清晨湖面</span></div>
+    <button class="chip chip-btn" id="dexBtn" aria-label="打开湖边图鉴">📖 湖边图鉴 <b id="dexCount">0/10</b></button>
+  </header>
+
+  <div class="status" id="statusText" aria-live="polite">薄雾还没散，湖面刚刚醒。点「抛竿」，开始今天第一竿。</div>
+
+  <footer class="dock-ui">
+    <button id="mainBtn" class="main-btn">🎣 抛竿</button>
+  </footer>
+
+  <!-- ══════════ 渔获 / 脱钩 弹窗 ══════════ -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="cardName">
+    <div class="modal-card" id="modalCard">
+      <div class="card-rarity" id="cardRarity">稀有</div>
+      <div class="card-art" id="cardArt"></div>
+      <div class="card-no" id="cardNo">No.01</div>
+      <h2 class="card-name" id="cardName">—</h2>
+      <div class="card-phase" id="cardPhase">—</div>
+      <p class="card-record" id="cardRecord">—</p>
+      <div class="card-actions" id="cardActions">
+        <button id="closeBtn" class="ghost-btn">收好</button>
+        <button id="againBtn" class="primary-btn">再钓一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 湖边图鉴 ══════════ -->
+  <div class="dex" id="dex" role="dialog" aria-modal="true" aria-label="湖边图鉴">
+    <div class="dex-card">
+      <div class="dex-head">
+        <h2>📖 湖边图鉴</h2>
+        <button id="dexClose" class="ghost-btn">合上</button>
+      </div>
+      <div class="dex-progress">
+        <span id="dexProgressText">已收集 0 / 10</span>
+        <div class="dex-bar"><i id="dexBarFill"></i></div>
+      </div>
+      <div class="dex-grid" id="dexGrid"></div>
+      <p class="dex-hint">不同时段的湖里，住着不同的东西。</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
